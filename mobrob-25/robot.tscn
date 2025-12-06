@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8tnh0q46fhdl"]
+
+[ext_resource type="Script" uid="uid://bmhe6siauxl3d" path="res://robot.gd" id="1_3cn6f"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gv0v2"]
+radius = 17.0
+
+[node name="Robot" type="Area2D"]
+script = ExtResource("1_3cn6f")
+
+[node name="Body" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(17, 0, 16, -6, 14, -10, 12, -12, 10, -14, 6, -16, 0, -17, -6, -16, -10, -14, -12, -12, -14, -10, -16, -6, -17, 0, -16, 6, -14, 10, -12, 12, -10, 14, -6, 16, 0, 17, 6, 16, 10, 14, 12, 12, 14, 10, 16, 6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gv0v2")
+
+[node name="WheelL" type="Polygon2D" parent="."]
+color = Color(0.5409905, 0.5409905, 0.5409905, 1)
+polygon = PackedVector2Array(-10, -16, 10, -16, 10, -16, 10, -18, -10, -18)
+
+[node name="WheelR" type="Polygon2D" parent="."]
+position = Vector2(0, 34)
+color = Color(0.5409905, 0.5409905, 0.5409905, 1)
+polygon = PackedVector2Array(-10, -16, 10, -16, 10, -16, 10, -18, -10, -18)
+
+[node name="Direction" type="Polygon2D" parent="."]
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(18, -6, 22, 0, 18, 6, 32, 0)
