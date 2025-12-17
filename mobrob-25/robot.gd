@@ -1,19 +1,41 @@
 extends Area2D
+@export var vl = 0.0000001
+@export var vr = 0
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var rob = {
+		'pose': [1, 2, 3],
+		'sigma': [4, 5, 6]
+	}
+	$HTTPRequestCreate.request(
+		'http://127.0.0.1:8000/robots/123',
+		['Content-Type: application/json'],
+		HTTPClient.METHOD_PUT,
+		JSON.stringify(rob)
+	)
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	var v = Vector2(1, 0).rotated(rotation)
-	if Input.is_action_pressed("FORWARD"):
-		position += v * 50 * delta
-	if Input.is_action_pressed("ROT_CW"):
-		rotation += 1 * delta
-	if Input.is_action_pressed("ROT_CCW"):
-		rotation += -1 * delta
+	var th = -rotation
+	var dsr = vr * delta
+	var dsl = vl * delta
+	var dth = (dsr - dsl) / 0.34
+	var r = (dsr + dsl) / 2 / dth
+	var dx = 2 * r * sin(dth / 2) * cos(th + dth / 2)
+	var dy = 2 * r * sin(dth / 2) * sin(th + dth / 2)
 	
-	pass
+	rotation -= dth
+	position.x += dx * 100
+	position.y -= dy * 100
+	
+	if Input.is_action_pressed("FORWARD"):
+		vl += 1 * delta
+		vr += 1 * delta
+	if Input.is_action_pressed("ROT_CW"):
+		vl += 1 * delta
+		vr -= 1 * delta
+	if Input.is_action_pressed("ROT_CCW"):
+		vl -= 1 * delta
+		vr += 1 * delta
