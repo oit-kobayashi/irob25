@@ -13,4 +13,9 @@
   resp: robot {id: id, {pose: [x, y, th], sigma: [[]]}}
   ロボットの pose と位置の分散共分散行列を取得。
   
-- PUT /robots/{id}
+- POST /robots/{id}/pred_update
+  body: {left: float, right: float}
+  resp: なし
+
+- POST /robots/{id}/perc_update
+
