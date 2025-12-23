@@ -35,3 +35,9 @@
 
 ## memo
 - HTTPie というモジュールをインストールすると http というコマンドでJSON postが楽
+
+## 12/23 to-do memo
+- Timer で予測更新コールバックを作る
+- _process 内の dsr, dsl を別の名前にリファクタリングして dsr, dsl はその積算ようとして(グローバルスコープで)使用。
+- 前項の dsr, dsl を Timer callback で使用。Σもグローバルスコープに作る。
+- _draw() 関数を追加して楕円を描く
