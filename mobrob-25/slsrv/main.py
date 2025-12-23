@@ -57,15 +57,15 @@ def update_robot(id: int, sensor: IntSensor):
     robot = read_db_robot(id)
     # update pose
     pose = robot['pose']
-    th = pose[2][0]
+    th = pose[2]
     phi = (dsr - dsl) / (2 * B)  # sin, cos の中が一緒なので
     dth = (dsr - dsl) / B
     r = (dsr + dsl) / (2 * dth)
     dx = (dsr + dsl) / 2 * np.cos(phi)
     dy = (dsr + dsl) / 2 * np.sin(phi)
-    pose[0][0] += dx
-    pose[1][0] += dy
-    pose[2][0] += dth
+    pose[0] += dx
+    pose[1] += dy
+    pose[2] += dth
     # update sigma
     sigma_p = np.array(robot['sigma'], dtype=np.float32)
     sigma_s = np.array([
@@ -91,7 +91,8 @@ def update_robot(id: int, sensor: IntSensor):
     sigma_p = jp.dot(sigma_p).dot(jp.T) + js.dot(sigma_s).dot(js.T)
     # store to DB
     robot['pose'] = pose
-    robot['sigma'] = sigma_p
+    robot['sigma'] = sigma_p.tolist()
+    print(robot)
     db.remove(Robot.id == id)
     db.insert(robot)
     return "ok"

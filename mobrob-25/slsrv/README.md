@@ -12,9 +12,9 @@
   ロボットの pose と**位置の分散共分散行列を取得**。
   
 - POST /robots/{id}/pred_update
-  body: {left: float, right: float}
+  body: {left: float, right: float, sll: float, srr: float}
   resp: なし
-  **予測更新**
+  **予測更新** left, right は左右輪の移動量, sll, srrはそれらの誤差分散。
 
 - POST /robots/{id}/perc_update
   body: 
