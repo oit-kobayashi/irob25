@@ -35,9 +35,23 @@
 
 ## memo
 - HTTPie というモジュールをインストールすると http というコマンドでJSON postが楽
+- GDScript にキーワード引数はないらしい
 
 ## 12/23 to-do memo
 - Timer で予測更新コールバックを作る
 - _process 内の dsr, dsl を別の名前にリファクタリングして dsr, dsl はその積算ようとして(グローバルスコープで)使用。
 - 前項の dsr, dsl を Timer callback で使用。Σもグローバルスコープに作る。
 - _draw() 関数を追加して楕円を描く
+
+## 1/6 to-do memo
+- _draw() 関数を追加して楕円を描く (12/23 のやり残し)
+- draw_set_transform_matrix() と draw_circle() で楕円が描ける
+- 楕円の傾きは固有ベクトル (lambda, P = np.linalg.eig()) から計算
+- robot = {
+      'id': id,
+      'pose': init_val.pose,
+      'sigma': sigma,
+      'lambdas': lambdas,            # 追加
+      'eigenvectors': eigenvectors   # 追加
+  }
+- 注意: eig() で求めた P において固有ベクトルは縦ベクトルなので robot に格納する際は適切に取り出す必要あり
