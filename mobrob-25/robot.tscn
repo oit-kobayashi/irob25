@@ -27,9 +27,13 @@ polygon = PackedVector2Array(-10, -16, 10, -16, 10, -16, 10, -18, -10, -18)
 color = Color(1, 0, 0, 1)
 polygon = PackedVector2Array(18, -6, 22, 0, 18, 6, 32, 0)
 
-[node name="HTTPRequestCreate" type="HTTPRequest" parent="."]
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
 
 [node name="RobotTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="HTTPRequestGet" type="HTTPRequest" parent="."]
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]
 [connection signal="timeout" from="RobotTimer" to="." method="_on_robot_timer_timeout"]
+[connection signal="request_completed" from="HTTPRequestGet" to="." method="_on_http_request_get_request_completed"]

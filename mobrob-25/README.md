@@ -51,7 +51,7 @@
       'id': id,
       'pose': init_val.pose,
       'sigma': sigma,
-      'lambdas': lambdas,            # 追加
+      'eigenvalues': eigenvalues,    # 追加
       'eigenvectors': eigenvectors   # 追加
   }
 - 注意: eig() で求めた P において固有ベクトルは縦ベクトルなので robot に格納する際は適切に取り出す必要あり

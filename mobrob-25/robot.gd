@@ -5,6 +5,8 @@ var dsr = 0.00001  # Delta S_r
 var dsl = 0  # Delta S_l
 var srr = 0  # sigma_rr
 var sll = 0  # sigma_ll
+var eig_vals = [0, 0]
+var eig_vecs = [[1, 0], [0, 1]]
 
 
 func _ready() -> void:
@@ -12,7 +14,7 @@ func _ready() -> void:
 		'pose': [1, 2, 3],
 		'sigma': [0.1 ** 2, 0.1 ** 2, 0.1 ** 1]
 	}
-	$HTTPRequestCreate.request(
+	$HTTPRequest.request(
 		'http://127.0.0.1:8000/robots/123',
 		['Content-Type: application/json'],
 		HTTPClient.METHOD_PUT,
@@ -50,9 +52,10 @@ func _process(delta: float) -> void:
 	if Input.is_action_pressed("ROT_CCW"):
 		vl -= 1 * delta
 		vr += 1 * delta
+	queue_redraw()
 
 func _on_robot_timer_timeout() -> void:
-	$HTTPRequestCreate.request(
+	$HTTPRequest.request(
 		'http://127.0.0.1:8000/robots/123/pred_update',
 		['Content-Type: application/json'],
 		HTTPClient.METHOD_POST,
@@ -68,3 +71,26 @@ func _on_robot_timer_timeout() -> void:
 	sll = 0
 	srr = 0
 	
+func _draw() -> void:
+	var r1 = eig_vals[0] ** 0.5
+	var r2 = eig_vals[1] ** 0.5
+	var ph = atan2(eig_vecs[0][1], eig_vecs[0][0])
+	print(r1, r2)
+	draw_set_transform_matrix(Transform2D(
+							   -rotation + ph,
+							   Vector2(r1, r2) * 10,
+							   0,
+							   Vector2(0, 0)))
+	draw_circle(Vector2(0, 0), 30, Color.AQUA, false)
+	draw_set_transform_matrix(Transform2D.IDENTITY)
+
+
+func _on_http_request_get_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	var j = JSON.parse_string(body.get_string_from_utf8())
+	print(j)
+	eig_vals = j['eigenvalues']
+	eig_vecs = j['eigenvectors']
+
+
+func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	$HTTPRequestGet.request('http://127.0.0.1:8000/robots/123')

@@ -27,8 +27,16 @@ def read_db_robot(id: int):
     return r[0]
 
 
+# タプルを返す (固有値リスト, 固有ベクトルリスト)
+# ex. ([1, 2], [[1, 2], [3, 4]]) λ=1に対して[1,2]
+def calc_eig(sigma):
+    lmd, vec = np.linalg.eig(sigma[0:2, 0:2])
+    return (lmd.tolist(), vec.T.tolist())
+
+
 @app.get("/robots/{id}")
 def read_robot(id: int):
+    print("read_robot")
     return read_db_robot(id)
 
 
@@ -39,10 +47,13 @@ def create_robot(id: int, init_val: NewRobot):
         [0, init_val.sigma[1], 0],
         [0, 0, init_val.sigma[2]],
     ]
+    eigvals, eigvecs = calc_eig(sigma)
     robot = {
         'id': id,
         'pose': init_val.pose,
-        'sigma': sigma
+        'sigma': sigma,
+        'eigenvalues': eigvals,
+        'eigenvectors': eigvecs
     }
     db.remove(Robot.id == id)
     db.insert(robot)
@@ -90,8 +101,11 @@ def update_robot(id: int, sensor: IntSensor):
     ], dtype=np.float32)
     sigma_p = jp.dot(sigma_p).dot(jp.T) + js.dot(sigma_s).dot(js.T)
     # store to DB
+    eigvals, eigvecs = get_eig(sigma_p)
     robot['pose'] = pose
     robot['sigma'] = sigma_p.tolist()
+    robot['eigenvalues'] = eigvals
+    robot['eigenvectors'] = eigvecs
     print(robot)
     db.remove(Robot.id == id)
     db.insert(robot)
