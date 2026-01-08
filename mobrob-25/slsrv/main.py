@@ -101,7 +101,7 @@ def update_robot(id: int, sensor: IntSensor):
     ], dtype=np.float32)
     sigma_p = jp.dot(sigma_p).dot(jp.T) + js.dot(sigma_s).dot(js.T)
     # store to DB
-    eigvals, eigvecs = get_eig(sigma_p)
+    eigvals, eigvecs = calc_eig(sigma_p)
     robot['pose'] = pose
     robot['sigma'] = sigma_p.tolist()
     robot['eigenvalues'] = eigvals
