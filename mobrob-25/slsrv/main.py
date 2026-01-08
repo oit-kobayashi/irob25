@@ -69,7 +69,7 @@ def update_robot(id: int, sensor: IntSensor):
     # update pose
     pose = robot['pose']
     th = pose[2]
-    phi = (dsr - dsl) / (2 * B)  # sin, cos の中が一緒なので
+    phi = th + (dsr - dsl) / (2 * B)  # sin, cos の中が一緒なので
     dth = (dsr - dsl) / B
     r = (dsr + dsl) / (2 * dth)
     dx = (dsr + dsl) / 2 * np.cos(phi)
