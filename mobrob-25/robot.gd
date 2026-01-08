@@ -7,12 +7,14 @@ var srr = 0  # sigma_rr
 var sll = 0  # sigma_ll
 var eig_vals = [0, 0]
 var eig_vecs = [[1, 0], [0, 1]]
+var est_pose = [3.0, -1.0, -3.141592/2]  # also initial pose
 
 
 func _ready() -> void:
-	position = Vector2(300, 150)
+	position = Vector2(est_pose[0] * 100, -est_pose[1] * 100)
+	rotation = -est_pose[2]
 	var rob = {
-		'pose': [position.x / 100, -position.y / 100, 0],
+		'pose': est_pose,
 		'sigma': [0.1 ** 2, 0.1 ** 2, 0.1 ** 1]
 	}
 	$HTTPRequest.request(
@@ -76,17 +78,20 @@ func _draw() -> void:
 	var r1 = eig_vals[0] ** 0.5
 	var r2 = eig_vals[1] ** 0.5
 	var ph = atan2(eig_vecs[0][1], eig_vecs[0][0])
-	draw_set_transform_matrix(Transform2D(
-							   -rotation - ph,
-							   Vector2(r1, r2) * 10,
-							   0,
-							   Vector2(0, 0)))
+	var _est_pose = Vector2(   # est_pose on screen coordinate
+		est_pose[0] * 100,
+		-est_pose[1] * 100
+	) - position
+	var mat = Transform2D()
+	mat = mat.scaled(Vector2(r1, r2) * 10).rotated(-rotation - ph) # .translated(_est_pose)
+	draw_set_transform_matrix(mat)
 	draw_circle(Vector2(0, 0), 30, Color.AQUA, false)
 	draw_set_transform_matrix(Transform2D.IDENTITY)
 
 
 func _on_http_request_get_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	var j = JSON.parse_string(body.get_string_from_utf8())
+	est_pose = j['pose']
 	eig_vals = j['eigenvalues']
 	eig_vecs = j['eigenvectors']
 
