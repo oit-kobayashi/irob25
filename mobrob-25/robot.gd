@@ -10,8 +10,9 @@ var eig_vecs = [[1, 0], [0, 1]]
 
 
 func _ready() -> void:
+	position = Vector2(300, 150)
 	var rob = {
-		'pose': [1, 2, 3],
+		'pose': [position.x / 100, -position.y / 100, 0],
 		'sigma': [0.1 ** 2, 0.1 ** 2, 0.1 ** 1]
 	}
 	$HTTPRequest.request(
@@ -33,8 +34,8 @@ func _process(delta: float) -> void:
 	var dy = 2 * r * sin(dth / 2) * sin(th + dth / 2)
 	dsr += sr
 	dsl += sl
-	srr += abs(sr) * 1.0
-	sll += abs(sl) * 1.0
+	srr += abs(sr) * 0.001
+	sll += abs(sl) * 0.001
 	
 	rotation -= dth
 	position.x += dx * 100
@@ -75,9 +76,8 @@ func _draw() -> void:
 	var r1 = eig_vals[0] ** 0.5
 	var r2 = eig_vals[1] ** 0.5
 	var ph = atan2(eig_vecs[0][1], eig_vecs[0][0])
-	print(r1, r2)
 	draw_set_transform_matrix(Transform2D(
-							   -rotation + ph,
+							   -rotation - ph,
 							   Vector2(r1, r2) * 10,
 							   0,
 							   Vector2(0, 0)))
@@ -87,7 +87,6 @@ func _draw() -> void:
 
 func _on_http_request_get_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	var j = JSON.parse_string(body.get_string_from_utf8())
-	print(j)
 	eig_vals = j['eigenvalues']
 	eig_vecs = j['eigenvectors']
 
