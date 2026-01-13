@@ -83,11 +83,15 @@ func _draw() -> void:
 		-est_pose[1] * 100
 	) - position
 	var mat = Transform2D()
-	mat = mat.scaled(Vector2(r1, r2) * 10).rotated(-rotation - ph) # .translated(_est_pose)
+	mat = mat.scaled(Vector2(r1, r2) * 10).rotated(-ph).translated(_est_pose).rotated(-rotation)
 	draw_set_transform_matrix(mat)
 	draw_circle(Vector2(0, 0), 30, Color.AQUA, false)
 	draw_set_transform_matrix(Transform2D.IDENTITY)
-
+	var m2 = Transform2D()
+	m2 = m2.translated(Vector2(100,0)).rotated(-rotation)
+	draw_set_transform_matrix(m2)
+	draw_circle(Vector2(0, 0), 50, Color.YELLOW, false)
+	
 
 func _on_http_request_get_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	var j = JSON.parse_string(body.get_string_from_utf8())
