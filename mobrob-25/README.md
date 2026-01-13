@@ -55,3 +55,9 @@
       'eigenvectors': eigenvectors   # 追加
   }
 - 注意: eig() で求めた P において固有ベクトルは縦ベクトルなので robot に格納する際は適切に取り出す必要あり
+
+## 1/13 memo
+- root ノードは Node や Node2D。
+- 壁は StaticBody2D が良いらしい。
+- robot が body_entered を発火。
+- [issue] 衝突対策は move_and_slide() を使うべきらしい。その場合 _process ではなく _physics_process にする必要がある。
