@@ -87,10 +87,6 @@ func _draw() -> void:
 	draw_set_transform_matrix(mat)
 	draw_circle(Vector2(0, 0), 30, Color.AQUA, false)
 	draw_set_transform_matrix(Transform2D.IDENTITY)
-	var m2 = Transform2D()
-	m2 = m2.translated(Vector2(100,0)).rotated(-rotation)
-	draw_set_transform_matrix(m2)
-	draw_circle(Vector2(0, 0), 50, Color.YELLOW, false)
 	
 
 func _on_http_request_get_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
