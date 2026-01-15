@@ -72,8 +72,10 @@ def update_robot(id: int, sensor: IntSensor):
     phi = th + (dsr - dsl) / (2 * B)  # sin, cos の中が一緒なので
     dth = (dsr - dsl) / B
     r = (dsr + dsl) / (2 * dth)
-    dx = (dsr + dsl) / 2 * np.cos(phi)
-    dy = (dsr + dsl) / 2 * np.sin(phi)
+    dx = (dsr + dsl) / 2 * np.cos(phi) # 1st order approx.
+    dy = (dsr + dsl) / 2 * np.sin(phi) # 1st order approx.
+    # dx = 2 * r * np.sin(dth / 2) * np.cos(th + dth / 2) # accurate
+    # dy = 2 * r * np.sin(dth / 2) * np.sin(th + dth / 2) # accurate
     pose[0] += dx
     pose[1] += dy
     pose[2] += dth
