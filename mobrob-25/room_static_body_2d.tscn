@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bo16sasoqxdh0"]
+
+[node name="RoomStaticBody2D" type="StaticBody2D"]
+
+[node name="LPolygon2D" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(0, 0, 0, 608, 32, 608, 32, 0)
+
+[node name="LCollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(0, 0, 0, 608, 32, 608, 32, 0, 16, 0)

@@ -63,8 +63,8 @@ func _on_robot_timer_timeout() -> void:
 		['Content-Type: application/json'],
 		HTTPClient.METHOD_POST,
 		JSON.stringify({
-			'left': dsl,
-			'right': dsr,
+			'left': dsl + randfn(0, sll),
+			'right': dsr + randfn(0, srr),
 			's_ll': sll,
 			's_rr': srr
 		})

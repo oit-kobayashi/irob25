@@ -61,3 +61,7 @@
 - 壁は StaticBody2D が良いらしい。
 - robot が body_entered を発火。
 - [issue] 衝突対策は move_and_slide() を使うべきらしい。その場合 _process ではなく _physics_process にする必要がある。
+
+## 1/13 memo on the lecture
+- [issue] 誤差を入れないのに楕円の中心がズレる
+

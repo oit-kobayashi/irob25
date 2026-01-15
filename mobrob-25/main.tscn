@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmblxr7dnw104"]
+
+[ext_resource type="PackedScene" uid="uid://b8tnh0q46fhdl" path="res://robot.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://bo16sasoqxdh0" path="res://room_static_body_2d.tscn" id="2_0xm2m"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Robot" parent="." instance=ExtResource("1_ig7tw")]
+
+[node name="RoomStaticBody2D" parent="." instance=ExtResource("2_0xm2m")]
