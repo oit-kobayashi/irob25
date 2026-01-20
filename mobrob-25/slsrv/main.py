@@ -14,6 +14,15 @@ class IntSensor(BaseModel): # interoceptive sensor
     s_rr:     float   # sigma_rr (right variance)
     s_ll:     float   # sigma_ll (left variance)
 
+class ExtSensor(BaseModel): # exteroceptive sensor
+    # note: all those params are ext. sensor's
+    x:        float   # x position
+    y:        float   # y position
+    th:       float   # theta
+    s_xx:     float   # sigma_xx
+    s_yy:     float   # sigma_yy
+    s_tt:     float   # sigma_theta_theta
+    
 class NewRobot(BaseModel): # for create_robot
     pose: list[float]
     sigma: list[float]
@@ -109,6 +118,39 @@ def update_robot(id: int, sensor: IntSensor):
     robot['eigenvalues'] = eigvals
     robot['eigenvectors'] = eigvecs
     # print(robot)
+    db.remove(Robot.id == id)
+    db.insert(robot)
+    return "ok"
+
+
+@app.post("/robots/{id}/perc_update")
+def update_robot(id: int, sensor: ExtSensor):
+    print("perception update")
+    robot = read_db_robot(id)
+    # robot's opinion
+    p1 = np.array(robot['pose'], dtype=np.float32).reshape((3,1))
+    s1 = np.array(robot['sigma'], dtype=np.float32)
+    # ext. sensor's opinion
+    p2 = np.array([[sensor.x],
+                   [sensor.y],
+                   [sensor.th]])
+    s2 = np.array([[sensor.s_xx, 0, 0],
+                   [0, sensor.s_yy, 0],
+                   [0, 0, sensor.s_tt]])
+    # Kalman filter
+    k = s1.dot(np.linalg.inv(s1 + s2))
+    print(k)
+    print(p2)
+    print(p1)
+    print(p2-p1)
+    p1 += k.dot(p2 - p1)
+    print(f'before: {s1}')
+    s1 += -k.dot(s1 + s2).dot(k.T)
+    print(f'after: {s1}')
+
+    # store to DB
+    robot['pose'] = p1.reshape((3,)).tolist()
+    robot['sigma'] = s1.tolist()
     db.remove(Robot.id == id)
     db.insert(robot)
     return "ok"

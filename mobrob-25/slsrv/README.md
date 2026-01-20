@@ -17,6 +17,7 @@
   **予測更新** left, right は左右輪の移動量, sll, srrはそれらの誤差分散。
 
 - POST /robots/{id}/perc_update
-  body: 
+  body: {x: float, y: float, th: float,
+         s_xx: float, s_yy: float, s_tt: flaot}
   resp: なし
   **計測更新**

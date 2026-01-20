@@ -8,6 +8,7 @@ var sll = 0  # sigma_ll
 var eig_vals = [0, 0]
 var eig_vecs = [[1, 0], [0, 1]]
 var est_pose = [3.0, -1.0, -3.141592/2]  # also initial pose
+var ext_sensor_count = 10 # exteroceptive sensor counter
 
 
 func _ready() -> void:
@@ -86,6 +87,7 @@ func _draw() -> void:
 	mat = mat.scaled(Vector2(r1, r2) * 10).rotated(-ph).translated(_est_pose).rotated(-rotation)
 	draw_set_transform_matrix(mat)
 	draw_circle(Vector2(0, 0), 30, Color.AQUA, false)
+	draw_circle(Vector2(0, 0), 1, Color.WHITE, false)
 	draw_set_transform_matrix(Transform2D.IDENTITY)
 	
 
@@ -94,7 +96,31 @@ func _on_http_request_get_request_completed(result: int, response_code: int, hea
 	est_pose = j['pose']
 	eig_vals = j['eigenvalues']
 	eig_vecs = j['eigenvectors']
+	ext_sensor_count -= 1
+	if ext_sensor_count <= 0:
+		ext_sensor_count = 10
+		print("perception update!")
+		$HTTPRequest.request(
+			'http://127.0.0.1:8000/robots/123/perc_update',
+			['Content-Type: application/json'],
+			HTTPClient.METHOD_POST,
+			JSON.stringify({
+				'x': randfn(position.x / 100, 1),
+				'y': randfn(-position.y / 100, 1),
+				'th': randfn(-rotation, 0.1),
+				's_xx': 1.0,
+				's_yy': 1.0,
+				's_tt': 1.0
+			})
+		)
+
 
 
 func _on_http_request_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
 	$HTTPRequestGet.request('http://127.0.0.1:8000/robots/123')
+
+
+func _on_http_request_perception_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
+	var j = JSON.parse_string(body.get_string_from_utf8())
+	est_pose = j['pose']
+	
