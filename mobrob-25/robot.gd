@@ -110,7 +110,7 @@ func _on_http_request_get_request_completed(result: int, response_code: int, hea
 				'th': randfn(-rotation, 0.1),
 				's_xx': 1.0,
 				's_yy': 1.0,
-				's_tt': 1.0
+				's_tt': 0.1
 			})
 		)
 
